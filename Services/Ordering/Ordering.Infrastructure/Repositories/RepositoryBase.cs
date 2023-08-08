@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Contracts.Persistence;
 using Ordering.Domain.Common;
+using Ordering.Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,10 @@ namespace Ordering.Infrastructure.Repositories
 {
     public class RepositoryBase<T> : IAsyncRepository<T> where T : EntityBase
     {
-        private readonly DbContext _dbContext;
+        protected readonly OrderContext _dbContext;
         private DbSet<T> _query;
 
-        public RepositoryBase(DbContext dbContext)
+        public RepositoryBase(OrderContext dbContext)
         {
             _dbContext = dbContext;
             _query = _dbContext.Set<T>();
