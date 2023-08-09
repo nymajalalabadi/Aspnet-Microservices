@@ -24,18 +24,31 @@ namespace Ordering.Api.Extensions
                 try
                 {
                     logger.LogInformation("migrating started for sql server");
-                    context.Database.Migrate();
-                    seeder(context, services);
+                    InvokeSeeder(seeder, context, services);
                     logger.LogInformation("migrating has been done for sql server");
                 }
-                catch (SqlException e)
+                catch (SqlException ex)
                 {
-                    Console.WriteLine(e);
+                    logger.LogError(ex, "an error occurred while migrating database");
+
+                    if (retryForAvailability < 50)
+                    {
+                        retryForAvailability++;
+                        System.Threading.Thread.Sleep(2000);
+                        MigrateDatabase<TContext>(host, seeder, retryForAvailability);
+                    }
                     throw;
                 }
             }
 
             return host;
+        }
+
+        private static void InvokeSeeder<TContext>(Action<TContext, IServiceProvider> seeder, TContext context,
+            IServiceProvider services) where TContext : DbContext
+        {
+            context.Database.Migrate();
+            seeder(context, services);
         }
     }
 }
