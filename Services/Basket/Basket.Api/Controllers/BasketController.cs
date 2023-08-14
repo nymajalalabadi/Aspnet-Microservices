@@ -69,5 +69,37 @@ namespace Basket.Api.Controllers
 
         #endregion
 
+        #region check out
+
+        [HttpPost("[action]")]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
+        {
+            // get existing basket with total price
+
+            var basket = await _basketRepository.GetUserBasket(basketCheckout.UserName);
+
+            if (basket == null)
+            {
+                return BadRequest();
+            }
+
+            // create BasketCheckoutEvent -- set total price on basketcheckout event message
+
+
+            // send checkout event to rabbitmq
+
+
+            // remove basket
+
+            await _basketRepository.DeleteBasket(basketCheckout.UserName);
+
+
+
+            return Ok();
+        }
+
+        #endregion
     }
 }
