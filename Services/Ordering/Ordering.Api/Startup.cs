@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using Ordering.Api.EventBusConsumer;
 using Ordering.Application;
 using Ordering.Infrastructure;
+using System.Reflection;
 
 namespace Ordering.Api
 {
@@ -27,6 +28,7 @@ namespace Ordering.Api
             services.AddControllers();
             services.AddApplicationServices();
             services.AddInfrastructureServices(Configuration);
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddMassTransit(config =>
             {
@@ -39,9 +41,10 @@ namespace Ordering.Api
                     {
                         c.ConfigureConsumer<BasketCheckoutConsumer>(ctx);
                     });
-
                 });
             });
+
+            services.AddScoped<BasketCheckoutConsumer>();
 
             services.AddSwaggerGen(c =>
             {
