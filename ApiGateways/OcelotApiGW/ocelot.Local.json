@@ -12,7 +12,8 @@
         }
       ],
       "UpstreamPathTemplate": "/Catalog",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "FileCacheOptions": { "TtlSeconds": 40 }
     },
     {
       "DownstreamPathTemplate": "/api/v1/Catalog/{id}",
@@ -61,7 +62,14 @@
         }
       ],
       "UpstreamPathTemplate": "/Basket",
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "3s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      }
     },
     // Discount Api
     {
