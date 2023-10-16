@@ -28,15 +28,18 @@ namespace Shopping.Aggregator.Controllers
         {
             var basket = await _basketService.GetBasket(userName);
 
-            foreach (var item in basket.Items)
+            if (basket != null)
             {
-                var product = await _catalogService.GetCatalog(item.ProductId);
+                foreach (var item in basket.Items)
+                {
+                    var product = await _catalogService.GetCatalog(item.ProductId);
 
-                item.ProductName = product.Name;
-                item.Category = product.Category;
-                item.Summary = product.Summary;
-                item.Description = product.Description;
-                item.ImageFile = product.ImageFile;
+                    item.ProductName = product.Name;
+                    item.Category = product.Category;
+                    item.Summary = product.Summary;
+                    item.Description = product.Description;
+                    item.ImageFile = product.ImageFile;
+                }
             }
 
             var orders = await _orderService.GetOrderByUserName(userName);
